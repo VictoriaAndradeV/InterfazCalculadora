@@ -3,9 +3,9 @@ package ec.edu.ups.calculadora.vista;
 import ec.edu.ups.calculadora.modelo.Operacion;
 
 import java.awt.*;
-import java.awt.event.ItemEvent;
+import java.awt.event.*;
 
-public class VentanaCalculadora extends Frame{
+public class ViewCalculadora extends Frame{
 
     private Panel panelGeneral;
     private Panel panelSuperior;
@@ -31,7 +31,7 @@ public class VentanaCalculadora extends Frame{
     private Operacion calculadora;
 
 
-    public VentanaCalculadora() {
+    public ViewCalculadora() {
         setTitle("Calculadora Operaciones elementales");
         setSize(500, 500);
         setLocationRelativeTo(null);
@@ -88,15 +88,86 @@ public class VentanaCalculadora extends Frame{
 
         add(panelGeneral);
         setVisible(true);
-        /*
-        checkBoxSuma.addItemListener({
+
+        checkBoxSuma.addItemListener(new ItemListener() {
             @Override
-            public void itemStateChanged(ItemEvent){
-
+            public void itemStateChanged(ItemEvent e) {
+                validarCheckBox((Checkbox) e.getSource());
             }
+        });
 
-        });*/
+        checkBoxResta.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                validarCheckBox((Checkbox) e.getSource());
+            }
+        });
 
+        checkBoxMultiplicacion.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                validarCheckBox((Checkbox) e.getSource());
+            }
+        });
+
+        checkBoxDivision.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                validarCheckBox((Checkbox) e.getSource());
+            }
+        });
+
+        botonCalcular.addActionListener( new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                if(checkBoxSuma.getState() == true){
+                    sumar();
+                } else if(checkBoxResta.getState() == true){
+                    restar();
+                } else if (checkBoxMultiplicacion.getState() == true){
+                    multiplicar();
+                }else{
+                    dividir();
+                }
+            }
+        });
+
+        botonLimpiar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                limpiar();
+            }
+        });
+
+        addWindowListener(new WindowAdapter() {
+
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
+
+    }
+
+    public void validarCheckBox(Checkbox checkbox) {
+
+        if(checkbox.getState()==true && checkbox.getLabel().equals("Suma")){
+            checkBoxResta.setState(false);
+            checkBoxMultiplicacion.setState(false);
+            checkBoxDivision.setState(false);
+        }else if(checkbox.getState()==true && checkbox.getLabel().equals("Resta")){
+            checkBoxSuma.setState(false);
+            checkBoxMultiplicacion.setState(false);
+            checkBoxDivision.setState(false);
+        }else if(checkbox.getState()==true && checkbox.getLabel().equals("Multiplicacion")){
+            checkBoxSuma.setState(false);
+            checkBoxResta.setState(false);
+            checkBoxDivision.setState(false);
+        }else{
+            checkBoxSuma.setState(false);
+            checkBoxResta.setState(false);
+            checkBoxMultiplicacion.setState(false);
+        }
     }
 
 
@@ -241,9 +312,43 @@ public class VentanaCalculadora extends Frame{
         double resultado = calculadora.sumar();
         //convertir de double a cadena de texto
         textFieldResultado.setText(String.valueOf(resultado));
-
     }
 
+    public void restar(){
+        double numero1 = Double.parseDouble(textFieldNum1.getText());
+        double numero2 = Double.parseDouble(textFieldNum2.getText());
 
+        calculadora.setNumero1(numero1);
+        calculadora.setNumero2(numero2);
+
+        double resultado = calculadora.restar();
+        textFieldResultado.setText(String.valueOf(resultado));
+    }
+
+    public void multiplicar(){
+        double numero1 = Double.parseDouble(textFieldNum1.getText());
+        double numero2 = Double.parseDouble(textFieldNum2.getText());
+
+        calculadora.setNumero1(numero1);
+        calculadora.setNumero2(numero2);
+
+        double resultado = calculadora.multiplicar();
+        textFieldResultado.setText(String.valueOf(resultado));
+    }
+
+    public void dividir(){
+        double numero1 = Double.parseDouble(textFieldNum1.getText());
+        double numero2 = Double.parseDouble(textFieldNum2.getText());
+
+        calculadora.setNumero1(numero1);
+        calculadora.setNumero2(numero2);
+
+        double resultado = calculadora.dividir();
+        textFieldResultado.setText(String.valueOf(resultado));
+    }
+
+    public void limpiar(){
+        textFieldResultado.setText("0.00");
+    }
 
 }
